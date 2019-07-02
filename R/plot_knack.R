@@ -2,7 +2,7 @@
 plot.knack<-function(knat = catdes.123$Q1.Nb, 
                       col.neg=pickobrew(the.palette = "YlOrRd", the.indexes = 6), 
                       col.pos=pickobrew(the.palette = "YlGn", the.indexes = 4), 
-                      col.na=gray(level = 0.95), ...){
+                      col.na=gray(level = 0.95), ... ){
   if(class(knat)[1]=="catdes"){
     knat2<-tabacp(knat)
   } else {knat2<-knat}
