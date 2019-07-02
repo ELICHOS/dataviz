@@ -1,5 +1,12 @@
+#' plot.knack
+#'
+#' @param knat Aknat
+#' @param col.neg col.neg
+#' @param col.pos col.pos
+#' @param col.na col.na
+#' @return a plot
 #' @export
-plot.knack<-function(knat = catdes.123$Q1.Nb, 
+knack.plot <- function(knat = catdes.123$Q1.Nb, 
                       col.neg=pickobrew(the.palette = "YlOrRd", the.indexes = 6), 
                       col.pos=pickobrew(the.palette = "YlGn", the.indexes = 4), 
                       col.na=gray(level = 0.95), ... ){
