@@ -1,3 +1,4 @@
+#' @export
 net_stacked <- function(x=test, YLIM=c(-0.8, 0.2), positives0=c(3, 4), negatives0=1, neutral0=2) {
   
   ## x: a data.frame or list, where each column is a ordered factor with the same levels

@@ -1,3 +1,4 @@
+#' @export
 fonkytonk<-function(varname.pattern="Q1.Nb", ordering=nombri, QUESTION="Test", len.wrap=10,
                     Title.Size=6,
                     Enquete.size=4,

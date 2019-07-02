@@ -1,3 +1,4 @@
+#' @export
 fonkytonk3<-function(Funkyquest=trap, QUESTION="Test",
                      ordering=nombri,
                      len.wrap=10,

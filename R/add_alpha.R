@@ -1,3 +1,4 @@
+#' @export
 add.alpha <- function(col, alpha=1){
   if(missing(col))
     stop("Please provide a vector of colours.")

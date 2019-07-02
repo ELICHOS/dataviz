@@ -1,3 +1,4 @@
+#' @export
 funkyquest<-function(varlab=c("Q1NB"), dfs=DFS){
   laplo<-lapply(seq_along(dfs), FUN = function(i){
     dfs[[i]]->pani

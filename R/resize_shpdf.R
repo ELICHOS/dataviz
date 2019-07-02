@@ -1,3 +1,4 @@
+#' @export
 resize.shpdf<-function(shp.df=shp.df.aura2, 
                        long.lim=c(minlong, maxlong),
                        lat.lim=c(minlat, maxlat)){

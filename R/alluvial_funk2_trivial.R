@@ -1,3 +1,4 @@
+#' @export
 allu.funk2<-function(var.names=c("Q2.Profil.e1"),
                      ordering=c("Non", "Oui","Ne sait pas"),
                      leg.size=15,

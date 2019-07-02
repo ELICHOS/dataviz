@@ -1,3 +1,4 @@
+#' @export
 colors.of.factors<-function(VAR.factor=source.aggre$Var1 , col.palette="Spectral", col.manual=FALSE, col.vector ){
   if(col.manual==FALSE){
   #data.frame("levels"=levels(VAR.factor), 

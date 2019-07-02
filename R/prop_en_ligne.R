@@ -1,3 +1,4 @@
+#' @export
 prop.en.ligne<-function(DATA=Dep.NiVi, REF="01", LIGNE=4,
                         NAMES=names(Dep.NiVi)[grepl("Décile", names(Dep.NiVi))|grepl("Ensemble", names(Dep.NiVi))],
                         cols=c(col1, col2), YLIM.VALEUR=c(250, 1000), YLIM.PROP=c(0, 100),

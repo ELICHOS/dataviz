@@ -1,3 +1,4 @@
+#' @export
 scoring.funky<-function(matrice.de.distance=matdedist, feedback=FALSE,
                         OUTSIDE=FALSE, df.OUTSIDE=places14.COR, nb.enfant.alternate=NULL){
   ####

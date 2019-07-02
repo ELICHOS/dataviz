@@ -1,3 +1,4 @@
+#' @export
 pickobrew<-function(the.palette="PuBuGn", the.indexes=c(3, 6, 9)){
   library(RColorBrewer)
   brewer.pal.info->databrew

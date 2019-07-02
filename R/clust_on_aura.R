@@ -1,3 +1,4 @@
+#' @export
 clust.on.aura<-function(var="CLUSTER.PAM", plot.in.r=FALSE,
                         optional.filename="GrandLyon",
                         colors=colo, TEXTCOM=TRUE, QUELCOM="préfecture",

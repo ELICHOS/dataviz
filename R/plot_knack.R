@@ -1,3 +1,4 @@
+#' @export
 plot.knack<-function(knat = catdes.123$Q1.Nb, 
                       col.neg=pickobrew(the.palette = "YlOrRd", the.indexes = 6), 
                       col.pos=pickobrew(the.palette = "YlGn", the.indexes = 4), 

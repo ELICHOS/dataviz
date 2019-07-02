@@ -1,3 +1,4 @@
+#' @export
 kingstong<-function(VARLAB="Q1NB", DFS=list(pan1data, pan2data, pan3data),
                     ORDERING=nombri,
                     LEN.WRAP=70,

@@ -1,3 +1,4 @@
+#' @export
 longlat<-function(adjust.ou.pos="adjust",
                   prop=0.8,
                   object=shp.df.aura2,

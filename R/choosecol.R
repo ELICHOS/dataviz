@@ -1,3 +1,4 @@
+#' @export
 choosecol<-function(namecol){
   list(
   "nega.enqconj"=rgb(218, 0, 0, maxColorValue = 255),
