@@ -8,6 +8,7 @@ kingstong<-function(VARLAB="Q1NB", DFS=list(pan1data, pan2data, pan3data),
                     TEXT.SIZE=4, IFLEGEND=FALSE, MARGES.DU.PLOT=c(5, 5, 5, 5),
                     WIDTHCAT=list("big"="3", "small"=c("1", "2")), ...){
   ####
+  library(ggplot2)
   funkyquest(varlab = VARLAB, dfs=DFS)->trap
   blanklab<-""
   question.lab<-sub('.*\\.', '',

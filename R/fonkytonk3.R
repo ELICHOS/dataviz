@@ -15,7 +15,7 @@ fonkytonk3<-function(Funkyquest=trap, QUESTION="Test",
   df$Var1<-ordered(x = df$Var1, ordering)
   df[order(df$Var2, match(df$Var1, ordering)),]->df
   nrow(df)/length(unique(df$Var2))->length.each
-  df$Var2<-c(rep(1, length.each), rep(1.5, length.each), rep(2.25, length.each))
+  df$Var2<-c(rep(1, length.each), rep(1.5, length.each), rep(2, length.each),rep(2.75, length.each) )
   df$text_y<-unlist(c(by(data = df$Freq[dim(df)[1]:1], INDICES = df$Var2, FUN = function(x){cumsum(x)-x/2} )))
 
 
@@ -27,9 +27,10 @@ fonkytonk3<-function(Funkyquest=trap, QUESTION="Test",
     }
   }
   )
-  enq1<-dim(pan1data)[1]
-  enq2<-dim(pan2data)[1]
-  enq3<-dim(pan3data)[1]
+  # enq1<-dim(pan1data)[1]
+  # enq2<-dim(pan2data)[1]
+  # enq3<-dim(pan3data)[1]
+  # enq4<-
   df$blanc<-sapply(1:nrow(df), function(i){
     if(df$Var1[i]=="Plus nombreuses"|df$Var1[i]=="S'accroitre"|df$Var1[i]=="Ne sait pas"|df$Var1[i]=="Se sont dégradées"|df$Var1[i]=="Plus difficile aujourd'hui"){"blanc"} else {"black"}
   })
@@ -110,8 +111,8 @@ fonkytonk.repel<-function(varname.pattern="Q1.Nb", ordering=nombri, QUESTION="Te
     }
   }
   )
-  enq1<-dim(pan1data)[1]
-  enq2<-dim(pan2data)[1]
+  #enq1<-dim(pan1data)[1]
+  #enq2<-dim(pan2data)[1]
   df$blanc<-sapply(1:nrow(df), function(i){
     if(df$Var1[i]=="Plus nombreuses"|df$Var1[i]=="S'accroitre"|df$Var1[i]=="Ne sait pas"|df$Var1[i]=="Se sont d?grad?es"|df$Var1[i]=="Plus difficile aujourd'hui"){"blanc"} else {"black"}
   })
