@@ -1,5 +1,5 @@
 #' barplot.diverg permet de repr?senter une variable factor issue d'une enqu?te de mani?re divergente
-#' @title barplot.diverg
+#' 
 #' @author Elie
 #' @param data data.v1.2 ; le data.frame
 #' @param var1 data.v1.2$La.situation.d.emploi ; le data.frame ind?x?
