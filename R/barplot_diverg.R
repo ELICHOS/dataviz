@@ -30,8 +30,6 @@
 #' @param XLAB "%"
 #' @return la fonction ne retourne rien du tout.
 #' @export
-
-
 barplot.diverg<-function(data=data.v1.2 , var1=data.v1.2$La.situation.d.emploi , var2=data.v1.2$dep_T ,
                          interactive.vars=TRUE,
                          marginvar=2 ,
