@@ -4,63 +4,53 @@
 \alias{squareseqlegend}
 \title{squareseqlegend permet de construire une légende pour des variables séquentielles}
 \usage{
-squareseqlegend(Qcut = Qrat, Couleur = ColRat, orientation = "v",
-  seuil.inf.x = 0.01, seuil.sup.x = 0.95, seuil.inf.y = 0.2,
-  seuil.sup.y = 0.4, bbox.data = france.dep@bbox, textlabels = Qrat,
-  text.side = "right", text.space = 0.02, text.cex = 0.8,
-  text.double = FALSE, text.haut = c("0\%", "25\%", "50\%", "75\%",
-  "100\%"), text.bas = Qrat, text.gauche = c("0\%", "25\%", "50\%",
-  "75\%", "100\%"), text.droit = Qrat, title.log = TRUE,
-  title.label = "Quartiles", title.pos = 4)
+squareseqlegend(
+  Qcut = Qrat,
+  Couleur = ColRat,
+  orientation = "v",
+  seuil.inf.x = 0.01,
+  seuil.sup.x = 0.95,
+  seuil.inf.y = 0.2,
+  seuil.sup.y = 0.4,
+  bbox.data = france.dep@bbox,
+  textlabels = Qrat,
+  text.side = "right",
+  text.space = 0.02,
+  text.cex = 0.8,
+  text.double = FALSE,
+  text.haut = c("0\%", "25\%", "50\%", "75\%", "100\%"),
+  text.bas = Qrat,
+  text.gauche = c("0\%", "25\%", "50\%", "75\%", "100\%"),
+  text.droit = Qrat,
+  title.log = TRUE,
+  title.label = "Quartiles",
+  title.pos = 4
+)
 
-squareseqlegend(Qcut = Qrat, Couleur = ColRat, orientation = "v",
-  seuil.inf.x = 0.01, seuil.sup.x = 0.95, seuil.inf.y = 0.2,
-  seuil.sup.y = 0.4, bbox.data = france.dep@bbox, textlabels = Qrat,
-  text.side = "right", text.space = 0.02, text.cex = 0.8,
-  text.double = FALSE, text.haut = c("0\%", "25\%", "50\%", "75\%",
-  "100\%"), text.bas = Qrat, text.gauche = c("0\%", "25\%", "50\%",
-  "75\%", "100\%"), text.droit = Qrat, title.log = TRUE,
-  title.label = "Quartiles", title.pos = 4)
+squareseqlegend(
+  Qcut = Qrat,
+  Couleur = ColRat,
+  orientation = "v",
+  seuil.inf.x = 0.01,
+  seuil.sup.x = 0.95,
+  seuil.inf.y = 0.2,
+  seuil.sup.y = 0.4,
+  bbox.data = france.dep@bbox,
+  textlabels = Qrat,
+  text.side = "right",
+  text.space = 0.02,
+  text.cex = 0.8,
+  text.double = FALSE,
+  text.haut = c("0\%", "25\%", "50\%", "75\%", "100\%"),
+  text.bas = Qrat,
+  text.gauche = c("0\%", "25\%", "50\%", "75\%", "100\%"),
+  text.droit = Qrat,
+  title.log = TRUE,
+  title.label = "Quartiles",
+  title.pos = 4
+)
 }
 \arguments{
-\item{Qcut}{Vecteur des seuils}
-
-\item{Couleur}{Vecteur des couleurs}
-
-\item{orientation}{Orientation: 'h' ou 'v'}
-
-\item{seuil.inf.x}{Positions x de la légende dans le plan: en \% du plan à gauche}
-
-\item{seuil.sup.x}{et à droite}
-
-\item{seuil.inf.y}{Idem pour y}
-
-\item{bbox.data}{Matrix des x et y max et min du plan}
-
-\item{textlabels}{Vecteur des labels}
-
-\item{text.side}{Position du texte: 'right'ou 'left' pour 'v' et 'bottom' ou 'top' pour 'h"}
-
-\item{text.space}{Esace entre le texte et la légende}
-
-\item{text.cex}{Cex du texte}
-
-\item{text.double}{Deux vecteurs de texte? (un de chaque coté?)}
-
-\item{text.haut}{SI text.double=TRUE}
-
-\item{text.bas}{SI text.double=TRUE}
-
-\item{text.gauche}{SI text.double=TRUE}
-
-\item{text.droit}{SI text.double=TRUE}
-
-\item{title.log}{un titre?}
-
-\item{title.label}{titre}
-
-\item{title.pos}{tittre alignement}
-
 \item{Qcut}{Vecteur des seuils}
 
 \item{Couleur}{Vecteur des couleurs}

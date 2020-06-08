@@ -4,10 +4,20 @@
 \alias{map.a.cat}
 \title{map.a.cat permet de tracer une carte avec des coloris dépendants d'une variable qualitative (factor).}
 \usage{
-map.a.cat(sp.object = france84, var = "datafactor",
-  alternate.df = NULL, alternate.var = NULL, match.id = NULL,
-  match.id.sp = NULL, qcol = col, borders = NULL, title = NULL,
-  subtitle = NULL, all.poly = TRUE, all.poly.borders = NA)
+map.a.cat(
+  sp.object = france84,
+  var = "datafactor",
+  alternate.df = NULL,
+  alternate.var = NULL,
+  match.id = NULL,
+  match.id.sp = NULL,
+  qcol = col,
+  borders = NULL,
+  title = NULL,
+  subtitle = NULL,
+  all.poly = TRUE,
+  all.poly.borders = NA
+)
 }
 \arguments{
 \item{sp.object}{A spatialpolygons or spatialpolygonsdataframe object}

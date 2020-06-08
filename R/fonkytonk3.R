@@ -6,16 +6,19 @@ fonkytonk3<-function(Funkyquest=trap, QUESTION="Test",
                     Enquete.size=4,
                     legend.size=2,
                     text.size=2.5, iflegend=FALSE, marges.du.plot=c(5, 5, 5, 5),
-                    widthcat=list("big"="3", "small"=c("1", "2"))){
+                    widthcat=list("big"="3", "small"=c("1", "2")), leg.pos="top", ADD.MEAN=add.mean){
   blanklab<-""
   Funkyquest->df
   df<-subset(df, !is.na(df$value)&df$value%in%ordering)
+  if(inherits(list.ech[[1]]$Q1.Nb.e1, "factor")){
   df$value<-droplevels(x =  df$value)
+  }
   data.frame(prop.table(table(df$value, df$times, exclude=""), margin = 2))->df
   df$Var1<-ordered(x = df$Var1, ordering)
   df[order(df$Var2, match(df$Var1, ordering)),]->df
   nrow(df)/length(unique(df$Var2))->length.each
-  df$Var2<-c(rep(1, length.each), rep(1.5, length.each), rep(2, length.each),rep(2.75, length.each) )
+  df$times<-df$Var2
+  df$Var2<-c(rep(1, length.each), rep(1.5, length.each), rep(2, length.each),rep(2.5, length.each) )
   df$text_y<-unlist(c(by(data = df$Freq[dim(df)[1]:1], INDICES = df$Var2, FUN = function(x){cumsum(x)-x/2} )))
 
 
@@ -37,23 +40,53 @@ fonkytonk3<-function(Funkyquest=trap, QUESTION="Test",
   big<-widthcat[["big"]]
   petit<-widthcat[["small"]]
   df$widthcat<-sapply(1:nrow(df), function(i){
-    if(df$Var2[i]%in%petit|df$Var2[i]!=max(df$Var2)){0.4} else {
-      if(df$Var2[i]%in%big|df$Var2[i]==max(df$Var2)){0.9}}
+    if(df$times[i]%in%petit#|df$Var2[i]!=max(df$Var2)
+       ){0.4} else {
+      if(df$times[i]%in%big#|df$Var2[i]==max(df$Var2)
+         ){0.9}}
   }
   )
-  ggplot(data = df , aes(x=Var2, y = Freq, fill=Var1, width=widthcat))+
-    geom_bar(position = "fill",stat = "identity",  width = 1, ) +
-    scale_fill_manual(name=wrap.it(QUESTION, len = len.wrap),
+  if(ADD.MEAN==TRUE){
+    dfmean<-df %>% 
+      group_by(Var1) %>%
+      summarise("Var2"=max(df$Var2)+0.5,"Freq"=mean(Freq), 'times'="moyenne")
+    dfmean$text_y<-unlist(c(by(data = dfmean$Freq[dim(dfmean)[1]:1], INDICES = dfmean$Var2, FUN = function(x){cumsum(x)-x/2} )))
+    dfmean$xtext<-sapply(1:nrow(dfmean), FUN = function(x){
+      if(dfmean$Freq[x]<=0.02){
+        as.numeric(dfmean$Var2[x])
+      }else{
+        as.numeric(dfmean$Var2[x])
+      }
+    }
+    )
+    dfmean$blanc<-sapply(1:nrow(dfmean), function(i){
+      if(dfmean$Var1[i]=="Plus nombreuses"|dfmean$Var1[i]=="S'accroitre"|dfmean$Var1[i]=="Ne sait pas"|dfmean$Var1[i]=="Se sont dégradées"|dfmean$Var1[i]=="Plus difficile aujourd'hui"){"blanc"} else {"black"}
+    })
+    dfmean$widthcat<-0.65*min(df$widthcat)
+    df<-rbind(df, dfmean)
+
+  }
+  df$ALPHA<-sapply(1:nrow(df), function(i){
+    if(df$times[i]=="moyenne"){
+      0
+    } else {1}
+  })
+  ggplot(data = df , aes(x=Var2, y = Freq, fill=Var1, width=widthcat, alpha=ALPHA))+
+    geom_bar(position = "fill",stat = "identity",  width = 1) +
+    scale_fill_manual(name="",#wrap.it(QUESTION, len = len.wrap),
                       labels=paste(ordering, blanklab),
                       values=c(nega, stab, nesp, posi))+
+    scale_alpha_continuous(range=c(0.8, 1),guide = 'none')+
     guides(fill=guide_legend(ncol=length(levels(df$Var1)),
                              reverse=TRUE))+
     geom_text(aes(label=paste(round(Freq*100, 0), "%", sep=""),colour=factor(blanc),
                   y=rev(text_y), x=xtext, fill=Var1, fontface=2 ), size=text.size, force =1,
               show.legend = FALSE)+
     scale_color_manual(values=c(gray(level = 0), gray(level = 1)))+
+    scale_x_continuous(labels = unique(df[ , c("Var2", "times")])$times, breaks = unique(df[ , c("Var2", "times")])$Var2)+
     coord_flip() +
-    theme_void()+
+    theme_minimal()+
+    theme(axis.title = element_blank(), axis.text.x = element_blank())+
     #annotate("text", x = c(1, 2, 3), y = 0, size=Enquete.size,
     #         label=c(paste("Enqu?te #1"),
     #                 paste("Enqu?te #2"), paste("Enqu?te #3")
@@ -62,13 +95,13 @@ fonkytonk3<-function(Funkyquest=trap, QUESTION="Test",
     ggtitle(wrap.it(QUESTION, len = len.wrap))+
     if(iflegend==TRUE){
       theme(text= element_text(family="Calibri Light"),
-            legend.position= "bottom",
-            legend.title =  element_blank(),
-            legend.text=element_text(size=legend.size, face="bold"),
-            plot.title = element_text(family="Calibri Light" , face = "bold",
-                                      size = Title.Size, hjust = 0, vjust=0, margin=margin(0,0,30,0)),# plot.title = element_text(family = "sans", size = 18, margin=margin(0,0,30,0))
-            legend.justification = c(0.5, 1),
-            plot.margin=unit(marges.du.plot, "cm")
+            legend.position= leg.pos,#legend.key.size = legend.size,
+            #legend.title =  element_blank(),
+            #legend.text=element_text(size=legend.size, face="bold"),
+            #plot.title = element_text(family="Calibri Light" , face = "bold",
+             #                         size = Title.Size, hjust = 0, vjust=0, margin=margin(0,0,30,0))# plot.title = element_text(family = "sans", size = 18, margin=margin(0,0,30,0))
+            #legend.justification = c(0.5, 1),
+            #plot.margin=unit(marges.du.plot, "cm")
       ) } else {
         theme(text= element_text(family="Calibri Light"),
               legend.position= "hidden",

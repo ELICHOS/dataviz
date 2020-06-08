@@ -4,9 +4,15 @@
 \alias{knack.plot}
 \title{plot.knack}
 \usage{
-knack.plot(knat = catdes.123$Q1.Nb, col.neg = pickobrew(the.palette =
-  "YlOrRd", the.indexes = 6), col.pos = pickobrew(the.palette = "YlGn",
-  the.indexes = 4), col.na = gray(level = 0.95), ...)
+knack.plot(
+  knat = catdes.123$Q1.Nb,
+  col.neg = pickobrew(the.palette = "YlOrRd", the.indexes = 6),
+  col.pos = pickobrew(the.palette = "YlGn", the.indexes = 4),
+  col.na = gray(level = 0.95),
+  split.var = "GROUP",
+  facet.var = "TYPE",
+  ...
+)
 }
 \arguments{
 \item{knat}{Aknat}

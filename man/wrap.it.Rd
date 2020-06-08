@@ -11,6 +11,9 @@ wrap.it(x, len)
 
 \item{len}{length before wrapping}
 }
+\value{
+
+}
 \description{
 wrap.it permet d'insérer des codes "\ n" (to the line) dans une chaine de caractere
 }

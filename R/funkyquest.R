@@ -2,7 +2,8 @@
 funkyquest<-function(varlab=c("Q1NB"), dfs=DFS){
   laplo<-lapply(seq_along(dfs), FUN = function(i){
     dfs[[i]]->pani
-    pani[ , grepl(pattern = varlab,  gsub(".", "", x=names(pani), fixed = TRUE), ignore.case = TRUE)==TRUE]->pano
+    pani[ , grepl(pattern = varlab,  #gsub(".", "", x=names(pani), fixed = TRUE), ignore.case = TRUE)==TRUE]->pano
+                  names(pani), fixed=TRUE)==TRUE]->pano
     data.frame("times"=i, "value"=pano)->pano
     pano
   })

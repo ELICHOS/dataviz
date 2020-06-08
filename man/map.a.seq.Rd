@@ -4,11 +4,22 @@
 \alias{map.a.seq}
 \title{map.a.seq permet de tracer une carte avec des coloris dépendants d'une variable numérique continue.}
 \usage{
-map.a.seq(sp.object = france.base, var = "POPULATION",
-  alternate.df = NULL, alternate.var = NULL, match.id = NULL,
-  match.id.sp = NULL, compara = "sup", qcut = qrank, qcol = col,
-  borders = NULL, title = NULL, subtitle = NULL, all.poly = TRUE,
-  all.poly.borders = NA)
+map.a.seq(
+  sp.object = france.base,
+  var = "POPULATION",
+  alternate.df = NULL,
+  alternate.var = NULL,
+  match.id = NULL,
+  match.id.sp = NULL,
+  compara = "sup",
+  qcut = qrank,
+  qcol = col,
+  borders = NULL,
+  title = NULL,
+  subtitle = NULL,
+  all.poly = TRUE,
+  all.poly.borders = NA
+)
 }
 \arguments{
 \item{sp.object}{A spatialpolygons or spatialpolygonsdataframe object}

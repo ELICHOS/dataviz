@@ -11,6 +11,9 @@ wrap.labels(x, len)
 
 \item{len}{length before wrapping}
 }
+\value{
+
+}
 \description{
 wrap.labels permet d'appliquer wrap.it à une liste ou un vecteur
 }
