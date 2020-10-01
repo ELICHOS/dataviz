@@ -5,7 +5,8 @@ data_plot.my.var<-function(data=tosave$DATA,
                          equivalence.data=NULL, equivalence.var=NULL, equivalence.text=NULL, equivalence.gsub.patt=NULL, 
                          exclude=c(NA, "", " "), exclude.recod="non-réponse",
                          question.lab=NULL, 
-                         var.group=NULL, var.group.order=c()
+                         var.group=NULL, var.group.order=c(), 
+                         Rnd=1
                          ){
   library(dplyr)
   library(tidyr)
@@ -133,12 +134,12 @@ data_plot.my.var<-function(data=tosave$DATA,
   table(data.long.for.plot.corr[ , myna], exclude = NULL)->tab
   tab.df<-data.frame(tab)
   names(tab.df)<-c("VAR", "EFFECTIFS")
-  tab.df$PROP<-round(tab.df$EFFECTIFS/length(unique(data.wide.for.plot$ID))*100, 1)
+  tab.df$PROP<-round(tab.df$EFFECTIFS/length(unique(data.wide.for.plot$ID))*100, Rnd)
   } else {
     table("Groupes"=data.long.for.plot.corr$Groupes, "VAR"=data.long.for.plot.corr[ , myna], exclude = NULL)->tab
     tab.df<-data.frame(tab)
     names(tab.df)[names(tab.df)=="Freq"]<-"EFFECTIFS"
-    tab.df$PROP<-round(tab.df$EFFECTIFS/length(unique(data.wide.for.plot$ID))*100, 1)
+    tab.df$PROP<-round(tab.df$EFFECTIFS/length(unique(data.wide.for.plot$ID))*100, Rnd)
   }
   message("coucou143")
   if(!is.null(var.group)){
@@ -153,7 +154,7 @@ data_plot.my.var<-function(data=tosave$DATA,
       subset(tabG, tabG$Var1==tab.df$Groupes[i])$Freq
     })
     tab.df$PROP.groupe<-sapply(1:nrow(tab.df), function(i){
-      round(tab.df$EFFECTIFS[i]/subset(tabG, tabG$Var1==tab.df$Groupes[i])$Freq*100, 1)
+      round(tab.df$EFFECTIFS[i]/subset(tabG, tabG$Var1==tab.df$Groupes[i])$Freq*100, Rnd)
     })
     tab.df<-as.data.frame(tab.df)
     tab.df<-tab.df[order(tab.df$Groupes, tab.df$EFFECTIFS, decreasing = TRUE) , ]
@@ -187,8 +188,8 @@ data_plot.my.var<-function(data=tosave$DATA,
                          
 
 #' @export
-gg_plot.my.var <- function(gg_obj=test, type=c("lollipop", "bar", "polar", "circumpolar"), 
-                           orientation="h", label.space=0.1, label.size.prop=1,
+gg_plot.my.var <- function(gg_obj=test, type=c("lollipop", "bar", "polar", "circumpolar", "bar*style"), 
+                           orientation="h", label.space=0.1, label.space.x=0, label.size.prop=1,
                            colpal=c("wes", "Darjeeling1"), base.size=15){
   if("Groupes"%in%names(gg_obj$data)){
   gg_obj$data$VAR_A_LAB<-gg_obj$data$PROP.groupe
@@ -244,19 +245,35 @@ gg_plot.my.var <- function(gg_obj=test, type=c("lollipop", "bar", "polar", "circ
           } else {
             viridis(n=length(unique(gg_obj$data$VAR)), option = colpal[2])->wesal
           }
-      }
+        } else {
+          if(colpal[1]=="manual"){
+            colpal[[2]]->colman
+            levels(gg_obj$data$VAR)->levs
+            if(names(colman)%inALLboth%levs){
+              wesal<-colman
+            } else {
+              levs[!levs%in%names(colman)]->oubilev
+              stop(paste(c("Error in colpal : '", paste(oubilev, collapse = "' '"))))}
+          }
       }
         p<-p+scale_fill_manual(values=wesal)
       }
+    }
 
     library(ggrepel)
-    
-    
-    p<-p+ geom_label_repel(aes(label=paste("n = ", EFFECTIFS, " / ", VAR_A_LAB, "%", sep=""), x=labcor), force = 10,
-                           colour="white", alpha=0.9, direction = "x",min.segment.length = 0,point.padding = 0,
-                 position = position_stack(vjust = 0.5), size=base.size*label.size.prop, show.legend = FALSE)+
-      theme_void( base_size = base.size )+
+    message("here")
+    if(length(unique(gg_obj$data$VAR))<4){
+    p<-p+ geom_label(aes(label=paste("n = ", EFFECTIFS, " / ", VAR_A_LAB, "%", sep="")), #, x=labcor), 
+                           colour="white", alpha=0.9, position = position_stack(vjust = 0.5), size=base.size*label.size.prop, show.legend = FALSE)
+    } else {
+      p<-p+ geom_label_repel(aes(label=paste("n = ", EFFECTIFS, " / ", VAR_A_LAB, "%", sep=""), x=labcor), 
+                       force = 5,
+                       colour="white", alpha=0.9, direction = "x",min.segment.length = 0,point.padding = 5,
+                       position = position_stack(vjust = 0.5), size=base.size*label.size.prop, show.legend = FALSE)
+    }
+    p<-p+theme_void( base_size = base.size )+
       ggtitle(label = gg_obj$question)+theme(legend.title = element_blank())
+    
     
   } else {
     p<-ggplot(data = gg_obj$data, aes(x=VAR, fill=VAR, y=EFFECTIFS))
@@ -274,7 +291,7 @@ gg_plot.my.var <- function(gg_obj=test, type=c("lollipop", "bar", "polar", "circ
     #theme_minimal()+
     #Uggthemes::theme_hc()+
     if(orientation=="h"){
-      p<-p+dataviz::theme_MRIE_hc(coord_flip = TRUE, base_size = base.size )+coord_flip()
+      p<-p+dataviz::theme_MRIE_hc(coord_flip = TRUE, base_size = base.size)+coord_flip()
     } else {
       p<-p+dataviz::theme_MRIE_hc(coord_flip = FALSE, base_size = base.size)
     }
@@ -311,6 +328,16 @@ gg_plot.my.var <- function(gg_obj=test, type=c("lollipop", "bar", "polar", "circ
          } else {
            viridis(n=length(unique(gg_obj$data$VAR)), option = colpal[2])->wesal
          }
+       } else {
+         if(colpal[1]=="manual"){
+           colpal[[2]]->colman
+           levels(gg_obj$data$VAR)->levs
+           if(names(colman)%inALLboth%levs){
+             wesal<-colman
+           } else {
+             levs[!levs%in%names(colman)]->oubilev
+             stop(paste(c("Error in colpal : '", paste(oubilev, collapse = "' '"))))}
+         }
        }
      }
      p<-p+scale_fill_manual(values=wesal)+scale_colour_manual(values=wesal)
@@ -329,7 +356,7 @@ gg_plot.my.var <- function(gg_obj=test, type=c("lollipop", "bar", "polar", "circ
     if(orientation=="h"){
       depl<-"x"
       p<-p+geom_label(aes(x=VAR, y=EFFECTIFS, label=paste("n = ", EFFECTIFS, " / ", VAR_A_LAB, "%", sep=""), colour=VAR), 
-                            fill=add.alpha(col = gray(1), 0.9), size=base.size*label.size.prop, nudge_y = label.space*rangey)
+                            fill=add.alpha(col = gray(1), 0.9), size=base.size*label.size.prop, nudge_y = label.space*rangey, nudge_x = label.space.x*rangey)
     }
     if(orientation=="v"){
       library(ggrepel)
@@ -347,6 +374,113 @@ gg_plot.my.var <- function(gg_obj=test, type=c("lollipop", "bar", "polar", "circ
     p<-p+facet_wrap(Groupes~.)+
       labs(subtitle = "Pourcentages par groupe")
   }
+  return(p)
+}
+
+#' @export
+gg.round_my_rounds<-function(gg_obj=resd, 
+                             ORDER=NULL, 
+                             colpal=c("wes", "Darjeeling1"), 
+                             sizepal=c(5, "PROP"), 
+                             LENs=30, 
+                             lab.size=3, family.L="Ubuntu",
+                             NUDGE.X = 0.8, x.limit=c(-2.5, 2.5), y.limit=c(-1.1, 1.1), 
+                             SIZE.Q=5, family.Q="Ubuntu Condensed"){
+  if(length(ORDER)>1&length(ORDER)==length(unique(gg_obj$data$VAR))){
+    message("coucou")
+    gg_obj$data$VAR<-factor(gg_obj$data$VAR, levels = ORDER, ordered = TRUE)
+  }
+  
+  n <-  length(levels(gg_obj$data$VAR))
+  pts.circle <- data.frame(t(sapply(1:n,function(r)c(cos(2*r*pi/n),sin(2*r*pi/n)))))
+  names(pts.circle)<-c("x", "y")
+  cbind(gg_obj$data, pts.circle)->df
+  
+  df$ALIGN.X<-sapply(1:nrow(df), function(i){if(df$x[i]>=0){0} else {1}})
+  df$NUDGE.X<-sapply(1:nrow(df), function(i){if(df$x[i]>=0){NUDGE.X} else {-NUDGE.X}})
+  df$POS.X<-sapply(1:nrow(df), function(i){if(df$x[i]>=0){2} else {-2}})
+  
+  p<-ggplot(data = df, aes(x=x, y=y, colour=VAR))+
+    scale_x_continuous(limits = x.limit)+
+    scale_y_continuous(limits = y.limit)+
+    coord_equal()+
+    geom_label_repel(force = 0.2, aes(label=#wrap.it(
+                                        paste(VAR, "\n(n=", EFFECTIFS, "/", PROP, "%)", sep=""),#, 50), 
+                                      hjust=ALIGN.X), nudge_x = df$NUDGE.X, direction = "y", alpha=0.8, size=lab.size, family=family.L)+
+    geom_point(aes(size=EFFECTIFS), alpha=0.7)+
+    
+    theme_void(base_family = "Ubuntu")+
+    theme(legend.position = "none")
+  
+  if(!is.null(sizepal)){
+    if(inherits(sizepal, "character")&"PROP"%in%sizepal){
+      which(sizepal=="PROP")->PROP.pos
+      if(PROP.pos==1){
+        sizepal[1]<-as.numeric(sizepal[2])*min(gg_obj$data$EFFECTIFS)/max(gg_obj$data$EFFECTIFS)
+      }
+      if(PROP.pos==2){
+        sizepal[2]<-as.numeric(sizepal[1])*max(gg_obj$data$EFFECTIFS)/min(gg_obj$data$EFFECTIFS)
+      }
+      sizepal<-as.numeric(sizepal)
+    }
+    if(is.numeric(sizepal)){
+      
+      p<-p+
+        scale_size_continuous(range = sizepal)
+    }
+  }
+  if(is.null(colpal)){
+    rep(gray(0.4), times= length(unique(gg_obj$data$VAR)))->fillb
+    rep(gray(0.2), times= length(unique(gg_obj$data$VAR)))->coloub
+    p<-p+scale_fill_manual(values=fillb )+scale_colour_manual(values=coloub)
+    
+  } else {
+    if(length(colpal)==2){
+      if(colpal[1]=="wes"){
+        library(wesanderson)
+        if(!is.null(gg_obj$infos$exclude.recod)){
+          nl<-length(levels(gg_obj$data$VAR))-1
+          wes_palette(name = colpal[2], n = nl, type = "continuous")->wesal
+          names(wesal)<-levels(gg_obj$data$VAR)[levels(gg_obj$data$VAR)!=gg_obj$infos$exclude.recod]
+          c(gray(level = 0.5, alpha = 0.6))->norep
+          names(norep)<-gg_obj$infos$exclude.recod
+          c(wesal, norep)->wesal
+        } else {
+          wes_palette(name = colpal[2], n = length(unique(gg_obj$data$VAR)), type = "continuous")->wesal
+        }
+      } else {
+        if(colpal[1]=="viridis"){
+          library(viridis)
+          if(!is.null(gg_obj$infos$exclude.recod)){
+            nl<-length(levels(gg_obj$data$VAR))-1
+            viridis(n=nl, option = colpal[2])->wesal
+            names(wesal)<-levels(gg_obj$data$VAR)[levels(gg_obj$data$VAR)!=gg_obj$infos$exclude.recod]
+            c(gray(level = 0.5, alpha = 0.6))->norep
+            names(norep)<-gg_obj$infos$exclude.recod
+            c(wesal, norep)->wesal
+          } else {
+            viridis(n=length(unique(gg_obj$data$VAR)), option = colpal[2])->wesal
+          }
+        } else {
+          if(colpal[1]=="manual"){
+            colpal[[2]]->colman
+            levels(gg_obj$data$VAR)->levs
+            if(names(colman)%inALLboth%levs){
+              wesal<-colman
+            } else {
+              levs[!levs%in%names(colman)]->oubilev
+              stop(paste(c("Error in colpal : '", paste(oubilev, collapse = "' '"))))}
+          }
+        }
+      }
+    } else {
+      if(length(colpal)==length(unique(gg_obj$data$VAR))){
+        wesal<-colpal
+      }
+    }
+    p<-p+scale_colour_manual(values=wesal)
+  }
+  p<-p+annotate(geom = "text", x = 0, y = 0, label=gg_obj$question, size=SIZE.Q, family=family.Q)
   return(p)
 }
 
