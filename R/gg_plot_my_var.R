@@ -122,12 +122,7 @@ data_plot.my.var<-function(data=tosave$DATA,
       data.long.for.plot->data.long.for.plot.corr
     }
   }
-  
-  
-
-  
-
-  
+  data.long.for.plot.corr[ , myna]<-as.factor(data.long.for.plot.corr[ , myna])
   droplevels(x = data.long.for.plot.corr[ , myna])->data.long.for.plot.corr[ , myna]
   #print(head(data.long.for.plot.corr))
   if(is.null(var.group)){
@@ -385,7 +380,8 @@ gg.round_my_rounds<-function(gg_obj=resd,
                              LENs=30, 
                              lab.size=3, family.L="Ubuntu",
                              NUDGE.X = 0.8, x.limit=c(-2.5, 2.5), y.limit=c(-1.1, 1.1), 
-                             SIZE.Q=5, family.Q="Ubuntu Condensed"){
+                             SIZE.Q=5, family.Q="Ubuntu Condensed", 
+                             MOD.KEEP=NULL, ALPHA.RANGE=c(0.2, 1)){
   if(length(ORDER)>1&length(ORDER)==length(unique(gg_obj$data$VAR))){
     message("coucou")
     gg_obj$data$VAR<-factor(gg_obj$data$VAR, levels = ORDER, ordered = TRUE)
@@ -399,15 +395,22 @@ gg.round_my_rounds<-function(gg_obj=resd,
   df$ALIGN.X<-sapply(1:nrow(df), function(i){if(df$x[i]>=0){0} else {1}})
   df$NUDGE.X<-sapply(1:nrow(df), function(i){if(df$x[i]>=0){NUDGE.X} else {-NUDGE.X}})
   df$POS.X<-sapply(1:nrow(df), function(i){if(df$x[i]>=0){2} else {-2}})
-  
-  p<-ggplot(data = df, aes(x=x, y=y, colour=VAR))+
-    scale_x_continuous(limits = x.limit)+
+  if(!is.null(MOD.KEEP)){
+  df$alpha.var<-df$VAR%in%MOD.KEEP
+  } else {df$alpha.var<-TRUE}
+  if(!is.null(MOD.KEEP)){
+    p<-ggplot(data = df, aes(x=x, y=y, colour=VAR, alpha=alpha.var))
+  } else {
+    p<-ggplot(data = df, aes(x=x, y=y, colour=VAR))
+  }
+  p<-p+scale_x_continuous(limits = x.limit)+
     scale_y_continuous(limits = y.limit)+
     coord_equal()+
     geom_label_repel(force = 0.2, aes(label=#wrap.it(
                                         paste(VAR, "\n(n=", EFFECTIFS, "/", PROP, "%)", sep=""),#, 50), 
-                                      hjust=ALIGN.X), nudge_x = df$NUDGE.X, direction = "y", alpha=0.8, size=lab.size, family=family.L)+
-    geom_point(aes(size=EFFECTIFS), alpha=0.7)+
+                                      hjust=ALIGN.X), nudge_x = df$NUDGE.X, direction = "y", size=lab.size, family=family.L)+#alpha=0.8, 
+    geom_point(aes(size=EFFECTIFS))+#, alpha=0.7)+
+    scale_alpha_discrete(range = ALPHA.RANGE)+
     
     theme_void(base_family = "Ubuntu")+
     theme(legend.position = "none")

@@ -3,13 +3,15 @@ gg_plot_my_var_mystyle<-function(gg_obj=test,
                                colpal=c("wes", "Darjeeling1"), base.size=15, label.size=4.5, labels.n=TRUE){
   if(colpal[1]=="wes"){
     library(wesanderson)
-    if(!is.null(gg_obj$infos$exclude.recod)&gg_obj$infos$exclude.recod%in%levels(gg_obj$data$VAR)){
+    if(!is.null(gg_obj$infos$exclude.recod)){
+      if(gg_obj$infos$exclude.recod%in%levels(gg_obj$data$VAR)){
       nl<-length(levels(gg_obj$data$VAR))-1
       wes_palette(name = colpal[2], n = nl, type = "continuous")->wesal
       names(wesal)<-levels(gg_obj$data$VAR)[levels(gg_obj$data$VAR)!=gg_obj$infos$exclude.recod]
       c(gray(level = 0.5, alpha = 0.6))->norep
       names(norep)<-gg_obj$infos$exclude.recod
       c(wesal, norep)->wesal
+      }
     } else {
       wes_palette(name = colpal[2], n = length(unique(gg_obj$data$VAR)), type = "continuous")->wesal
     }

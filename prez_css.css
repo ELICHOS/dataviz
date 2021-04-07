@@ -1,0 +1,40 @@
+h1,h2,h3,legend{
+   font-size:20%;
+   font-weight:700;
+   color:#ff471a;
+  }
+  
+h4,h5{
+    font-weight:700;
+    color:#ff471a;
+ }
+
+mynote {
+  display: block;
+  background-color: #ff8566;
+  font-size: 100%;  
+  font-family: "Ubuntu Condensed";
+ }
+
+mynote_g {
+  display: block;
+  background-color: #339966;
+  font-size: 100%;  
+  font-family: "Ubuntu Condensed";
+ }
+
+
+
+.remark-slide-content.hljs-default {
+  border-top: 40px solid #23373B;
+}
+
+.remark-slide-content > h1 {
+  font-size: 30px;
+  margin-top: -55px;
+}
+
+.remark-slide-content > h2 {
+  font-size: 20px;
+  /*margin-top: -55px;*/
+}

@@ -4,25 +4,25 @@ clust.on.aura<-function(var="CLUSTER.PAM", plot.in.r=FALSE,
                         colors=colo, TEXTCOM=TRUE, QUELCOM="préfecture",
                         DEVICE="png", type.zone=NULL,
                         select.zone="07",
-                        legend.LOG=FALSE, title.size=10){
+                        legend.LOG=FALSE, title.size=10, SHP.DF=df.shp.com, centro){
   library(ggrepel)
   library(extrafont)
   #extrafont::loadfonts(device = "pdf")
   ####
   if(!is.null(type.zone)){
-    shp.clust.df<-subset(shp.clust.df, shp.clust.df[, type.zone]==select.zone)
-    centro<-subset(centro, as.numeric(centro$id)%in%shp.clust.df$INSEE_COM)
+    SHP.DF<-subset(SHP.DF, SHP.DF[, type.zone]==select.zone)
+    centro<-subset(centro, as.numeric(centro$id)%in%SHP.DF$INSEE_COM)
   }
   ####
   if(is.null(QUELCOM)){
     centro.def<-centro
   } else {
-  subset(shp.clust.df, grepl(shp.clust.df$STATUT, pattern = QUELCOM)==TRUE&grepl(shp.clust.df$STATUT, pattern = "Sous")==FALSE)->quelcom.df
+  subset(SHP.DF, grepl(SHP.DF$STATUT, pattern = QUELCOM)==TRUE&grepl(SHP.DF$STATUT, pattern = "Sous")==FALSE)->quelcom.df
   subset(centro, as.numeric(centro$id)%in%quelcom.df$INSEE_COM)->centro.def
   }
   ####
   p2 <- ggplot() +
-    geom_polygon(data = shp.clust.df,
+    geom_polygon(data = SHP.DF,
                  aes_string(x = "long", y = "lat", group = "group", fill= var))
 
   if(is.null(colors)){
@@ -37,7 +37,7 @@ clust.on.aura<-function(var="CLUSTER.PAM", plot.in.r=FALSE,
     if(TEXTCOM==TRUE){
       if(is.null(QUELCOM)){
       p4<-p3+
-      geom_path(data = shp.clust.df,
+      geom_path(data = SHP.DF,
                 aes(x = long, y = lat, group = group), colour=gray( level = 0.5), size=0.1)+
         #geom_path(data = df.unary.aura,
         #          aes(x = long, y = lat, group = group), colour=gray( level = 0.3), size=2.5)+
@@ -69,8 +69,8 @@ clust.on.aura<-function(var="CLUSTER.PAM", plot.in.r=FALSE,
       legend.key.size = unit(1, "cm")
     )
   }
-  p4<-p4+ggtitle(label = "Classification des communes de la r?gion AURA",
-                 subtitle = "Donn?es INSEE, Recensement de la population 2015, Base IRCOM 2014 \nR?alisation: MRIE 2018")+
+  p4<-p4+ggtitle(label = "Classification des communes de la région AURA",
+                 subtitle = "Données INSEE, Recensement de la population 2015, Base IRCOM 2014 \nRéalisation: MRIE 2018")+
     mytheme
   namoplo<-gsub(pattern = "\\.", replacement = "_", x = var)
   if(!is.null(optional.filename)){

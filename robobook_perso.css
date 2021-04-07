@@ -1,0 +1,37 @@
+  h1,legend{
+    font-family:"Roboto Slab","ff-tisa-web-pro","Georgia",Arial,sans-serif;
+    font-weight:700;
+    color: #ff6600;
+  }
+  
+    h2,h3,h4,h5,h6,legend{
+    font-family:"Roboto Slab","ff-tisa-web-pro","Georgia",Arial,sans-serif;
+    font-weight:700;
+    color: #009999;
+  }
+
+mynote {
+  display: block;
+  background-color: #ffad99;
+  font-size: 100%;  
+  font-family: "Ubuntu Condensed";
+ }
+
+mynote_g {
+  display: block;
+  background-color: #79d2a6;
+  font-size: 100%;  
+  font-family: "Ubuntu Condensed";
+ }
+
+blockquote {
+  background-color: #cccccc;
+  font-style: normal;
+ }
+ 
+ my_emphasis {
+   font-style: bold;
+   background-color: #cccccc;
+ }
+
+
