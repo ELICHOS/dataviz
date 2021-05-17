@@ -310,3 +310,14 @@ table .panel-body {
 h1 {
   color: #cc9900; 
 }
+
+h2 {
+  color: #cc9900;
+}
+
+blockquote {
+  background: #99ccff;
+  font-size: 0.85em;
+  font-style: italic;
+}
+

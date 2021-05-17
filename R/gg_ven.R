@@ -6,6 +6,7 @@ gg_venn<-function(data, lev, autolab=NULL, HIGH_COL=gray(0.1),
                                                      as.character(atridata$question.text[ atridata$names=="Q1Q" ])),
                   label.groups.size=2,
                   label.count=TRUE, label.which="both", label_alpha=0.7,label.groups.alpha=0.8,
+                  font_fam="Ubuntu",
                   PROP.COUNT.LABEL=TRUE, rnd=1, add.exclude=NULL, exclude.pos=c(0.7, 0.8), add.rayon=1, MARGS=margin(0, 0.5, 2, 0), sequential, ...
                   ){
   # SOURCE: https://github.com/gaospecial/ggVennDiagram
@@ -145,10 +146,10 @@ gg_venn<-function(data, lev, autolab=NULL, HIGH_COL=gray(0.1),
       p <- ggplot() + aes_string("x","y") +
         geom_polygon(aes_string(group="group", fill="FILLs"), data = dat.polygon, ... )+
         geom_label(aes(label=label),data=category.vi,size=label.groups.size,
-                   family="Ubuntu Condensed",fill=gray(level = 0.95), alpha= label.groups.alpha,
+                   family=font_fam,fill=gray(level = 0.95), alpha= label.groups.alpha,
                    fontface="bold",color="black",
                    hjust="inward",vjust="inward") +
-        theme_void(base_family="Ubuntu Condensed") + scale_fill_manual(values=c("TRUE"=gray(0.7), "FALSE"="white"))+
+        theme_void(base_family=font_fam) + scale_fill_manual(values=c("TRUE"=gray(0.7), "FALSE"="white"))+
         coord_fixed() +
         theme(legend.position = "none")
       
@@ -179,10 +180,10 @@ gg_venn<-function(data, lev, autolab=NULL, HIGH_COL=gray(0.1),
   p <- ggplot() + aes_string("x","y") +
     geom_polygon(aes_string(fill="count",group="group"),data = dat.polygon, ... )+
     geom_label(aes(label=label),data=category,size=label.groups.size,
-               family="Ubuntu Condensed",fill=gray(level = 0.95), alpha= label.groups.alpha,
+               family=font_fam,fill=gray(level = 0.95), alpha= label.groups.alpha,
                fontface="bold",color="black",
                hjust="inward",vjust="inward") +
-    theme_void(base_family="Ubuntu Condensed") + scale_fill_gradient(low="white",high = HIGH_COL) +
+    theme_void(base_family=font_fam) + scale_fill_gradient(low="white",high = HIGH_COL) +
     coord_fixed() +
     theme(legend.position = "none")
 
@@ -200,7 +201,7 @@ gg_venn<-function(data, lev, autolab=NULL, HIGH_COL=gray(0.1),
     if(!is.null(add.exclude)){
       if(isTRUE(add.exclude)){
       p<-p+annotate(geom = "text", x = addx, y = addy, label=disp.text, 
-                    family="Ubuntu Condensed", hjust=0)+
+                    family=font_fam, hjust=0)+
         coord_fixed(clip = 'off')+
         theme(plot.margin = MARGS)
         }
