@@ -7,9 +7,11 @@
 #' @param base.size voir gg_plot.my.var
 #' @param label.size voir gg_plot.my.var
 #' @param labels.n if TRUE : affiche les n() et les %. Si FALSE, que les %.
+#' @param axis.lab.size
 #' @export
 gg_plot_my_var_mystyle<-function(gg_obj=test,  
-                               colpal=c("wes", "Darjeeling1"), base.size=15, label.size=4.5, labels.n=TRUE){
+                               colpal=c("wes", "Darjeeling1"), 
+                               base.size=15, label.size=4.5, labels.n=TRUE, axis.lab.size=10){
   if(colpal[1]=="wes"){
     library(wesanderson)
     if(!is.null(gg_obj$infos$exclude.recod)){
@@ -96,14 +98,14 @@ if(labels.n==TRUE){
             hjust=0, alpha=1, colour=gray(0.2), family="Ubuntu Condensed", size=label.size)+
   ylab("%")+
   theme_MRIE_hc(base_size = base.size, base_family = "Ubuntu", coord_flip=TRUE)+
-  theme(legend.position = "none", axis.text.y = element_text(colour=c(gray(0), gray(0.3)), size=10))+
+  theme(legend.position = "none", axis.text.y = element_text(colour=c(gray(0), gray(0.3)), size=axis.lab.size))+
   scale_x_discrete(labels=function(x){wrap.it(x, 25)})+
   coord_flip()+
   xlab("")+labs(title = gg_obj$question)
   
   if("PROP.groupe"%in%names(gg_obj$data)){
     p<-p+ facet_wrap(.~Groupes)+
-      theme(strip.text = element_text(size=10))
+      theme(strip.text = element_text(size=axis.lab.size))
   }
   
   return(p)

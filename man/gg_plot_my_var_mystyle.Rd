@@ -9,7 +9,8 @@ gg_plot_my_var_mystyle(
   colpal = c("wes", "Darjeeling1"),
   base.size = 15,
   label.size = 4.5,
-  labels.n = TRUE
+  labels.n = TRUE,
+  axis.lab.size = 10
 )
 }
 \arguments{
