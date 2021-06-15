@@ -1,12 +1,29 @@
+#' gg_venn
+#' 
+#' permet de générer un diagram de Venn avec 2 ou 3 modalités qui se croisent. Il s'agit d'une reprise du code proposé dans ce paquet : https://github.com/gaospecial/ggVennDiagram . Du paquet ggVennDiagram sont reprises les fonctions suivantes : st_multi_intersection, st_multi_difference, st_multi_union, multi_union, multi_intersect, multi_setdiff, three_dimension_circle_regions et two_dimension_circle_regions
+#' 
+#' @param data data.frame où sont stockées la.les variables(s)
+#' @param vars variables concernées dans le df pour construire les groupes ; Exemple : c("Q2Q", "QP2", "Q1Q")
+#' @param label.groups c("Label pour le groupe  vars[1]", "Label pour le groupe vars[2]", ... )
+#' @param lev modalité à aller chercher dans les variables pour construire les groupes, qui sera remplacée par TRUE. 
+#' @param sequential si TRUE, chaque groupe est représenté dans un plot seul, et un dernier plot rassemble tous les groupes. L'output est alors une list de plot. 
+#' @param HIGH_COL couleur de remplissage pour la zone le plus importante numériquement (pour la plus faible, blanc par défaut, puis un dégradé est calculé entre les deux).
+#' @param label.groups.size taille des labels des groupes
+#' @param label.count Faut-il afficher les dénombement? 
+#' @param label.which si label.count==TRUE, quel type de décompte on affiche? "count", "percent" ou "both"
+#' @param label_alpha alpha des labels de dénombrement
+#' @param label.groups.alpha alpha des labels des noms de groupes
+#' @param font_fam ="Ubuntu"
+#' @param font_face ="plain",
 #' @export
-gg_venn<-function(data, lev, autolab=NULL, HIGH_COL=gray(0.1),
+gg_venn<-function(data, lev, HIGH_COL=gray(0.1),
                   vars=c("Q2Q", "QP2", "Q1Q"), 
                   label.groups=c(as.character(atridata$question.text[ atridata$names=="Q2Q" ]),
                                         as.character(atridata$question.text[ atridata$names=="QP2.MOUI." ]), 
                                                      as.character(atridata$question.text[ atridata$names=="Q1Q" ])),
                   label.groups.size=2,
                   label.count=TRUE, label.which="both", label_alpha=0.7,label.groups.alpha=0.8,
-                  font_fam="Ubuntu",
+                  font_fam="Ubuntu",font_face="plain",
                   PROP.COUNT.LABEL=TRUE, rnd=1, add.exclude=NULL, exclude.pos=c(0.7, 0.8), add.rayon=1, MARGS=margin(0, 0.5, 2, 0), sequential, ...
                   ){
   # SOURCE: https://github.com/gaospecial/ggVennDiagram
@@ -147,7 +164,7 @@ gg_venn<-function(data, lev, autolab=NULL, HIGH_COL=gray(0.1),
         geom_polygon(aes_string(group="group", fill="FILLs"), data = dat.polygon, ... )+
         geom_label(aes(label=label),data=category.vi,size=label.groups.size,
                    family=font_fam,fill=gray(level = 0.95), alpha= label.groups.alpha,
-                   fontface="bold",color="black",
+                   fontface=font_face,color="black",
                    hjust="inward",vjust="inward") +
         theme_void(base_family=font_fam) + scale_fill_manual(values=c("TRUE"=gray(0.7), "FALSE"="white"))+
         coord_fixed() +
@@ -181,14 +198,14 @@ gg_venn<-function(data, lev, autolab=NULL, HIGH_COL=gray(0.1),
     geom_polygon(aes_string(fill="count",group="group"),data = dat.polygon, ... )+
     geom_label(aes(label=label),data=category,size=label.groups.size,
                family=font_fam,fill=gray(level = 0.95), alpha= label.groups.alpha,
-               fontface="bold",color="black",
+               fontface=font_face,color="black",
                hjust="inward",vjust="inward") +
     theme_void(base_family=font_fam) + scale_fill_gradient(low="white",high = HIGH_COL) +
     coord_fixed() +
     theme(legend.position = "none")
 
     ######
-  if (!is.null(label.count)){
+  if (label.count==TRUE){
     if (label.which == "count"){
       p<-p + geom_label(aes(label=count),data=data.output,size=label.groups.size/1, label.size = NA, family="Ubuntu", alpha=label_alpha)
     }

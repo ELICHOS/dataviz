@@ -1,5 +1,14 @@
+#' kahtml
+#' 
+#' calcul ( avec basiques::table.con() ) et exporte au format html via kable() une table de contingence. 
+#' 
+#' @param data data.frame. Voir table.con
+#' @param vars voir table.con
+#' @param row_col si "row" affiche la somme par ligne. Si "col", affiche la somme par colonnes. Tous les noms utilisés dans l'output de table.con peuvent être utilisés.
+#' @param struct_data éventuellement, data.frame avec les données de structure du questionnaire (comprenant struct_data$question.text et struct_data$names).
+#' @param alter.datanames manuel : c("Libellé pour la variable 1", "Libellé pour la variable 2")
 #' @export
-kahtml<-function(data, vars, row_col, atridata, alter.datanames=NULL){#c("QP1.MOUI.", "QP2.MOUI.")){
+kahtml<-function(data, vars, row_col, struct_data, alter.datanames=NULL){#c("QP1.MOUI.", "QP2.MOUI.")){
   if(row_col=="row"){
     row_col<-"print_row"
   }
@@ -8,17 +17,17 @@ kahtml<-function(data, vars, row_col, atridata, alter.datanames=NULL){#c("QP1.MO
   }
   if(!is.null(alter.datanames)){
     varsnames<-alter.datanames
-    if(sum(!varsnames%in%atridata$names)>0){
+    if(sum(!varsnames%in%struct_data$names)>0){
       labar1<-varsnames[1]
         labar2<-varsnames[2]
     } else {
-      labar1<-atridata$question.text[atridata$names==varsnames[1]]
-      labar2<-atridata$question.text[atridata$names==varsnames[2]]
+      labar1<-struct_data$question.text[struct_data$names==varsnames[1]]
+      labar2<-struct_data$question.text[struct_data$names==varsnames[2]]
     }
   } else {
     varsnames<-vars
-    labar1<-atridata$question.text[atridata$names==varsnames[1]]
-    labar2<-atridata$question.text[atridata$names==varsnames[2]]
+    labar1<-struct_data$question.text[struct_data$names==varsnames[1]]
+    labar2<-struct_data$question.text[struct_data$names==varsnames[2]]
   }
   
 table.con(data = data, var = vars, )[[row_col]]->totab

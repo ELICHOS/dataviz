@@ -1,3 +1,12 @@
+#' theme_MRIE_hc
+#' 
+#' Thème pré-formaté MRIE pour ggplot. Reprend la structure des thèmes ggplot classiques et les arguments qui vont avec. 
+#'
+#' @param base_size base text size
+#' @param base_family font family
+#' @param style
+#' @param coord_flip les valeurs numériques sont-elles affichées en abscisse (x)? 
+#' @param bgcolor
 #' @export
 theme_MRIE_hc<-function (base_size = 12, base_family = "sans", style = c("default", 
                                                           "darkunica"), coord_flip=FALSE, bgcolor = NULL) 

@@ -1,3 +1,12 @@
+#' gg_plot_my_var_mystyle
+#' 
+#' voir gg_plot.my.var. Reprend gg_plot.my.var avec une pré-configuration MRIE (ne fonctionne que pour des geom_bar() ).
+#' 
+#' @param gg_obj voir gg_plot.my.var
+#' @param colpal voir gg_plot.my.var
+#' @param base.size voir gg_plot.my.var
+#' @param label.size voir gg_plot.my.var
+#' @param labels.n if TRUE : affiche les n() et les %. Si FALSE, que les %.
 #' @export
 gg_plot_my_var_mystyle<-function(gg_obj=test,  
                                colpal=c("wes", "Darjeeling1"), base.size=15, label.size=4.5, labels.n=TRUE){
@@ -11,6 +20,10 @@ gg_plot_my_var_mystyle<-function(gg_obj=test,
       c(gray(level = 0.5, alpha = 0.6))->norep
       names(norep)<-gg_obj$infos$exclude.recod
       c(wesal, norep)->wesal
+      } else {
+        nl<-length(levels(gg_obj$data$VAR))
+        wes_palette(name = colpal[2], n = nl, type = "continuous")->wesal
+        names(wesal)<-levels(gg_obj$data$VAR)[levels(gg_obj$data$VAR)!=gg_obj$infos$exclude.recod]
       }
     } else {
       wes_palette(name = colpal[2], n = length(unique(gg_obj$data$VAR)), type = "continuous")->wesal
@@ -19,15 +32,31 @@ gg_plot_my_var_mystyle<-function(gg_obj=test,
     if(colpal[1]=="viridis"){
       library(viridis)
       if(!is.null(gg_obj$infos$exclude.recod)){
-        nl<-length(levels(gg_obj$data$VAR))-1
-        viridis(n=nl, option = colpal[2])->wesal
-        names(wesal)<-levels(gg_obj$data$VAR)[levels(gg_obj$data$VAR)!=gg_obj$infos$exclude.recod]
-        c(gray(level = 0.5, alpha = 0.6))->norep
-        names(norep)<-gg_obj$infos$exclude.recod
-        c(wesal, norep)->wesal
+        if(gg_obj$infos$exclude.recod%in%levels(gg_obj$data$VAR)){
+          nl<-length(levels(gg_obj$data$VAR))-1
+          viridis(n=nl, option = colpal[2])->wesal
+          names(wesal)<-levels(gg_obj$data$VAR)[levels(gg_obj$data$VAR)!=gg_obj$infos$exclude.recod]
+          c(gray(level = 0.5, alpha = 0.6))->norep
+          names(norep)<-gg_obj$infos$exclude.recod
+          c(wesal, norep)->wesal
+        } else {
+          nl<-length(levels(gg_obj$data$VAR))
+          viridis(n=nl, option = colpal[2])->wesal
+          names(wesal)<-levels(gg_obj$data$VAR)[levels(gg_obj$data$VAR)!=gg_obj$infos$exclude.recod]
+        }
       } else {
-        viridis(n=length(unique(gg_obj$data$VAR)), option = colpal[2])->wesal
+        wes_palette(name = colpal[2], n = length(unique(gg_obj$data$VAR)), type = "continuous")->wesal
       }
+      # if(!is.null(gg_obj$infos$exclude.recod)){
+      #   nl<-length(levels(gg_obj$data$VAR))-1
+      #   viridis(n=nl, option = colpal[2])->wesal
+      #   names(wesal)<-levels(gg_obj$data$VAR)[levels(gg_obj$data$VAR)!=gg_obj$infos$exclude.recod]
+      #   c(gray(level = 0.5, alpha = 0.6))->norep
+      #   names(norep)<-gg_obj$infos$exclude.recod
+      #   c(wesal, norep)->wesal
+      # } else {
+      #   viridis(n=length(unique(gg_obj$data$VAR)), option = colpal[2])->wesal
+      # }
     } else {
       if(colpal[1]=="manual"){
         colpal[[2]]->colman
@@ -35,8 +64,13 @@ gg_plot_my_var_mystyle<-function(gg_obj=test,
         if(names(colman)%inALLboth%levs){
           wesal<-colman
         } else {
+          if(length(colman)==1){
+            rep(colman, times=length(levs))->wesal
+            names(wesal)<-levs
+          } else {
           levs[!levs%in%names(colman)]->oubilev
           stop(paste(c("Error in colpal : '", paste(oubilev, collapse = "' '"))))}
+        }
       }
     }
   }

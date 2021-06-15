@@ -1,6 +1,4 @@
-#' Value Matching
-#' 
-#' Complement of \code{%in%}. Is all y elements in x?
+#' Is all y elements in x?
 #' @usage x \%inALLy\% y
 #' @param x a vector
 #' @param y a vector

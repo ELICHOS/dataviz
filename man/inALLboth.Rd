@@ -2,7 +2,7 @@
 % Please edit documentation in R/inALLboth.R
 \name{\%inALLboth\%}
 \alias{\%inALLboth\%}
-\title{Value Matching}
+\title{Is all y and x elements are commons, ignoring order?}
 \usage{
 x \%inALLboth\% y
 }
@@ -12,5 +12,5 @@ x \%inALLboth\% y
 \item{y}{a vector}
 }
 \description{
-
+Is all y and x elements are commons, ignoring order?
 }

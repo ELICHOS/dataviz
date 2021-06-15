@@ -1,6 +1,5 @@
-#' Value Matching
+#' Is all y and x elements are commons, ignoring order?
 #' 
-#' Complement of \code{%in%}. Is all y and x elements are commons, ignoring order?
 #' @usage x \%inALLboth\% y
 #' @param x a vector
 #' @param y a vector

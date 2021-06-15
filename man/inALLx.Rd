@@ -2,7 +2,7 @@
 % Please edit documentation in R/inALLx.R
 \name{\%inALLx\%}
 \alias{\%inALLx\%}
-\title{Value Matching}
+\title{Is all x elements in y?}
 \usage{
 x \%inALLx\% y
 }
@@ -12,5 +12,5 @@ x \%inALLx\% y
 \item{y}{a vector}
 }
 \description{
-
+Is all x elements in y?
 }

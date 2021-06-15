@@ -1,3 +1,23 @@
+#' data_plot.my.var
+#' 
+#' permet de générer un tableau de données qui compte les occurences des modalités d'une variable, associées à des méta-données. La variable peut être une colonne unique, ou une série de colonnes identifiées par un pattern (var.pattern).
+#' 
+#' @param data data.frame où sont stockées la.les variables(s)
+#' @param var character. Nom de la variable
+#' @param var.pattern character. Pattern qui identifie les variables.Pour variables multiples.
+#' @param var.exclude character. Pattern a exclure de la recherche de variables. Pour variables multiples.
+#' @param var.order vector of characters. Order des levels à que l'on souhaite spécifier. 
+#' @param exclude vector of characters. Levels à supprimer dans le décompte. Exemple : c(NA, "", " ", "non-réponse")
+#' @param exclude.recod character. Si !is.null(exclude) permet de recoder les levels exclus. Exemple : "non-réponse". 
+#' @param question.lab Label de la question posée. 
+#' @param id
+#' @param equivalence.data data.frame donnant la structure du questionnaire, associant les noms de variables dans le data.frame original (equivalence.var) et un intitulé de question (equivalence.text). 
+#' @param equivalence.var
+#' @param equivalence.text
+#' @param equivalence.gsub.patt
+#' @param var.group faut-il dénombrer par groupes? Variable dans le data.frame original servat à grouper (character: nom de variable | numeric : position de la variable | un vecteur : la variable pour les groupes, de la même taille que la variable originale).
+#' @param var.group.order
+#' @param Rnd arrondi pour les pourcentages
 #' @export
 data_plot.my.var<-function(data=tosave$DATA, 
                          var=NULL, var.pattern=NULL, var.exclude=NULL, var.order=NULL,
@@ -33,6 +53,8 @@ data_plot.my.var<-function(data=tosave$DATA,
     data.frame(data[ , var])->data.wide.for.plot
     }
   }
+  
+  
   if(!is.null(id)){
     if(length(id)==1&(inherits(x = id, what = "character")|inherits(x = id, what = "numeric") )){
     data.wide.for.plot<-cbind("ID"=data[ , id], data.wide.for.plot)
@@ -114,6 +136,8 @@ data_plot.my.var<-function(data=tosave$DATA,
       data.long.for.plot->data.long.for.plot.corr
     } else {
         warning("Si vous spécifiez 'exclude.recod' vous devez spécifier 'exclude' => 'exclude.recod' non pris en compte.")
+      data.long.for.plot->data.long.for.plot.corr
+      
       }
   } else {
     if(!is.null(exclude)){
@@ -181,7 +205,21 @@ data_plot.my.var<-function(data=tosave$DATA,
   return(res)
 }
                          
-
+#' gg_plot.my.var
+#' 
+#' permet de faire un ggplot() rapide à partir de l'output de data_plot.my.var. 
+#' 
+#' @param gg_obj output de data_plot.my.var.
+#' @param type c("lollipop", "bar", "polar", "circumpolar", "bar*style")
+#' @param orientation "h" pour horizontal (par défaut).
+#' @param label.space numérique. Espacement des labels avec le point (nudge).Ordonnée. 
+#' @param label.space.x numérique. Espacement des labels avec le point (nudge)Abcisse. 
+#' @param label.size.prop size of label in fraction of base.size (label.size.prop*base.size)
+#' @param colpal list() ou vector(). colpal[1] donne le nom d'un paquet ("wes", "viridis" ou "manual") et colpal[2] donne le nom d'une palette (exemple : "Darjeeling1", "viridis" ou une palette manuelle).Si colpal[1]=="manual",  alors colpal[2] peut être un vector de couleurs nommé avec les levels présents dans les données, ou un character unique donnant une couleur unique pour tous les levels. 
+#' @param base.size Label de la question posée. 
+#' @examples
+#' X11()
+#' iris%>%data_plot.my.var(var = "Species", exclude = NULL, exclude.recod = NULL, question.lab = "Répartition des espèces")%>%gg_plot.my.var(type = "polar", label.size.prop = 0.35)
 #' @export
 gg_plot.my.var <- function(gg_obj=test, type=c("lollipop", "bar", "polar", "circumpolar", "bar*style"), 
                            orientation="h", label.space=0.1, label.space.x=0, label.size.prop=1,
@@ -247,8 +285,13 @@ gg_plot.my.var <- function(gg_obj=test, type=c("lollipop", "bar", "polar", "circ
             if(names(colman)%inALLboth%levs){
               wesal<-colman
             } else {
-              levs[!levs%in%names(colman)]->oubilev
-              stop(paste(c("Error in colpal : '", paste(oubilev, collapse = "' '"))))}
+              if(length(colman)==1){
+                rep(colman, times=length(levs))->wesal
+                names(wesal)<-levs
+              } else {
+                levs[!levs%in%names(colman)]->oubilev
+                stop(paste(c("Error in colpal : '", paste(oubilev, collapse = "' '"))))}
+            }
           }
       }
         p<-p+scale_fill_manual(values=wesal)
@@ -343,10 +386,19 @@ gg_plot.my.var <- function(gg_obj=test, type=c("lollipop", "bar", "polar", "circ
     ggplot_build(p)->buikd_p
     #if(orientation=="h"){
     unlist(lapply(buikd_p$data, function(fg){fg$y}))->vecy
-      max(vecy, na.rm = TRUE)-min(vecy, na.rm = TRUE)->rangey
+    message("vecy")
+    message(vecy)
+    max(vecy, na.rm = TRUE)->max.vecy
+    min(vecy, na.rm = TRUE)->min.vecy
+    max.vecy-min.vecy->rangey
+    if(length(unique(vecy))==1&rangey==0){
+      rangey<-unique(vecy)-0
+      min.vecy<-0
+    }
     #} else {
     #max(buikd_p$data[[1]]$x, na.rm = TRUE)-min(buikd_p$data[[1]]$x, na.rm = TRUE)->rangey
     #}
+      message("rangey")
     message(rangey)
     if(orientation=="h"){
       depl<-"x"
@@ -356,8 +408,10 @@ gg_plot.my.var <- function(gg_obj=test, type=c("lollipop", "bar", "polar", "circ
     if(orientation=="v"){
       library(ggrepel)
       depl<-"y"
-      p<-p+ylim(min(vecy, na.rm = TRUE), (max(vecy, na.rm = TRUE)+(label.space*rangey) ))+geom_label_repel(aes(x=VAR, y=EFFECTIFS, label=paste("n = ", EFFECTIFS, " / ", VAR_A_LAB, "%", sep=""), colour=VAR), segment.alpha = 0, direction = depl,
-                            ylim = c(min(vecy, na.rm = TRUE), (max(vecy, na.rm = TRUE)+(label.space*rangey) )),
+      p<-p+
+        #ylim(min(vecy, na.rm = TRUE), (max(vecy, na.rm = TRUE)+(label.space*rangey) ))
+        geom_label_repel(aes(x=VAR, y=EFFECTIFS, label=paste("n = ", EFFECTIFS, " / ", VAR_A_LAB, "%", sep=""), colour=VAR), segment.alpha = 0, direction = depl,
+                            ylim = c(min.vecy, (max.vecy+(label.space*rangey))),
                       fill=add.alpha(col = gray(1), 0.9), size=base.size*label.size.prop, nudge_y = label.space*rangey)
     }
 
@@ -372,6 +426,27 @@ gg_plot.my.var <- function(gg_obj=test, type=c("lollipop", "bar", "polar", "circ
   return(p)
 }
 
+
+#' gg.round_my_rounds
+#' 
+#' permet de représenter des points en cercle: chaque point représente une modalité, avec un label, et une taille qui dépend du nombre d'occurences. 
+#' 
+#' @param gg_obj output de data_plot.my.var.
+#' @param ORDER vector : labels présents dans les data, ordonnés : c("moda1", "moda2", ... )ze)
+#' @param colpal list() ou vector(). colpal[1] donne le nom d'un paquet ("wes", "viridis" ou "manual") et colpal[2] donne le nom d'une palette (exemple : "Darjeeling1", "viridis" ou une palette manuelle).Si colpal[1]=="manual",  alors colpal[2] peut être un vector de couleurs nommé avec les levels présents dans les données, ou un character unique donnant une couleur unique pour tous les levels. 
+#' @param sizepal range pour les size des points. Si c(5, "PROP"), cela signifie que la taille min. est de 5 et qua la taille max est proportionnelle aux données. On peut spécifier aussi c("PROP", 10), ou c(1, 10).
+#' @param lab.size size des labels
+#' @param family.L famille de font des labels.
+#' @param NUDGE.X espacement des labels avec les points
+#' @param x.limit et y.limit : range du cadran pour le calcul du cercle (invisible, sur lequel sont positionnés les points) c(-2.5, 2.5)
+#' @param y.limit et x.limit : range du cadran pour le calcul du cercle (invisible, sur lequel sont positionnés les points) c(-1.1, 1.1)
+#' @param SIZE.Q taille du libellé de la question au centre du cercle
+#' @param family.Q famille de fonts pour le libellé de la question au centre du cercle
+#' @param MOD.KEEP NULL vecteur de modalités à conserver. Si spécifié, les autres modalités sont "effacées" avec alpha=0 (voir ALPHA.RANGE), mais leur position dans le cercle n'est pas réaffectée. 
+#' @param ALPHA.RANGE range d'alpha pour effacement des modalités (si MOD.KEEP!=NULL)
+#' @examples
+#' X11()
+#' mtcars%>%data_plot.my.var(var = "cyl", exclude = NULL, exclude.recod = NULL, question.lab = "Nombre de cylindres")%>%gg.round_my_rounds(sizepal = c(10, "PROP"), colpal = c("manual", "black"))"))
 #' @export
 gg.round_my_rounds<-function(gg_obj=resd, 
                              ORDER=NULL, 
@@ -471,8 +546,13 @@ gg.round_my_rounds<-function(gg_obj=resd,
             if(names(colman)%inALLboth%levs){
               wesal<-colman
             } else {
-              levs[!levs%in%names(colman)]->oubilev
-              stop(paste(c("Error in colpal : '", paste(oubilev, collapse = "' '"))))}
+              if(length(colman)==1){
+                rep(colman, times=length(levs))->wesal
+                names(wesal)<-levs
+              } else {
+                levs[!levs%in%names(colman)]->oubilev
+                stop(paste(c("Error in colpal : '", paste(oubilev, collapse = "' '"))))}
+            }
           }
         }
       }

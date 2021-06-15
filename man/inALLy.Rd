@@ -2,7 +2,7 @@
 % Please edit documentation in R/inALLy.R
 \name{\%inALLy\%}
 \alias{\%inALLy\%}
-\title{Value Matching}
+\title{Is all y elements in x?}
 \usage{
 x \%inALLy\% y
 }
@@ -12,5 +12,5 @@ x \%inALLy\% y
 \item{y}{a vector}
 }
 \description{
-
+Is all y elements in x?
 }
