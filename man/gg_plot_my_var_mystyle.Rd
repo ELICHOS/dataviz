@@ -10,7 +10,8 @@ gg_plot_my_var_mystyle(
   base.size = 15,
   label.size = 4.5,
   labels.n = TRUE,
-  axis.lab.size = 10
+  axis.lab.size = 10,
+  wrap.len.axis.lab = 25
 )
 }
 \arguments{

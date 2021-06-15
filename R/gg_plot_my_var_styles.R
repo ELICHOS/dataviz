@@ -11,7 +11,7 @@
 #' @export
 gg_plot_my_var_mystyle<-function(gg_obj=test,  
                                colpal=c("wes", "Darjeeling1"), 
-                               base.size=15, label.size=4.5, labels.n=TRUE, axis.lab.size=10){
+                               base.size=15, label.size=4.5, labels.n=TRUE, axis.lab.size=10, wrap.len.axis.lab=25){
   if(colpal[1]=="wes"){
     library(wesanderson)
     if(!is.null(gg_obj$infos$exclude.recod)){
@@ -99,7 +99,7 @@ if(labels.n==TRUE){
   ylab("%")+
   theme_MRIE_hc(base_size = base.size, base_family = "Ubuntu", coord_flip=TRUE)+
   theme(legend.position = "none", axis.text.y = element_text(colour=c(gray(0), gray(0.3)), size=axis.lab.size))+
-  scale_x_discrete(labels=function(x){wrap.it(x, 25)})+
+  scale_x_discrete(labels=function(x){wrap.it(x, wrap.len.axis.lab)})+
   coord_flip()+
   xlab("")+labs(title = gg_obj$question)
   
