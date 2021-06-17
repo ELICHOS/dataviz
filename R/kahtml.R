@@ -9,6 +9,7 @@
 #' @param alter.datanames manuel : c("Libellé pour la variable 1", "Libellé pour la variable 2")
 #' @export
 kahtml<-function(data, vars, row_col, struct_data, alter.datanames=NULL){#c("QP1.MOUI.", "QP2.MOUI.")){
+  data<-as.data.frame(data)
   if(row_col=="row"){
     row_col<-"print_row"
   }
@@ -30,7 +31,7 @@ kahtml<-function(data, vars, row_col, struct_data, alter.datanames=NULL){#c("QP1
     labar2<-struct_data$question.text[struct_data$names==varsnames[2]]
   }
   
-table.con(data = data, var = vars, )[[row_col]]->totab
+table.con(data = data, var = vars)[[row_col]]->totab
 
   pk<-totab%>%  
   kable(format = "html", escape = TRUE,
@@ -38,20 +39,5 @@ table.con(data = data, var = vars, )[[row_col]]->totab
   kable_styling()%>%
     pack_rows(group_label = paste0("\u290B ", labar1), 
               start_row = 1, end_row = length(unique(data[ , vars[1]])))
-  
-  # if(row_col=="row"){
-  #   pk<-pk%>%
-  #   column_spec(column = ncol(totab)+1, bold = TRUE)
-  # } else {
-  # if(row_col=="col"){
-  #   print("COUCOU")
-  #   print("_____________________________________________________")
-  #   
-  #   #pk<-pk%>%
-  #   #row_spec(row = 5, bold = TRUE)
-  # }}
-  # 
-  # pk<-pk%>%pack_rows(group_label = paste0("\u290B ", labar1), 
-  #               start_row = 1, end_row = length(unique(data[ , vars[1]])))
   return(pk)
 }
