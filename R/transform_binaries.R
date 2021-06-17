@@ -26,8 +26,11 @@ transform_binaries<-function(data=trest,
                              external.data=struct_jeune, 
                              external.data.text="text",
                              external.data.names="names"){
+  
+  data<-as.data.frame(data)
+  
   if(type=="external"){
-    if(is.null(external.data)){
+    if(is.null(external.data)&is.null(external.data.text)){
       stop("Si type=external, il faut spécifier external.data")
     }
     
