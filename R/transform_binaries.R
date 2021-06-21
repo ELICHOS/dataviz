@@ -3,21 +3,6 @@
 #' transforme une série de 
 #' 
 #' @param data data.frame où sont stockées la.les variables(s)
-#' @param var character. Nom de la variable
-#' @param var.pattern character. Pattern qui identifie les variables.Pour variables multiples.
-#' @param var.exclude character. Pattern a exclure de la recherche de variables. Pour variables multiples.
-#' @param var.order vector of characters. Order des levels à que l'on souhaite spécifier. 
-#' @param exclude vector of characters. Levels à supprimer dans le décompte. Exemple : c(NA, "", " ", "non-réponse")
-#' @param exclude.recod character. Si !is.null(exclude) permet de recoder les levels exclus. Exemple : "non-réponse". 
-#' @param question.lab Label de la question posée. 
-#' @param id
-#' @param equivalence.data data.frame donnant la structure du questionnaire, associant les noms de variables dans le data.frame original (equivalence.var) et un intitulé de question (equivalence.text). 
-#' @param equivalence.var
-#' @param equivalence.text
-#' @param equivalence.gsub.patt
-#' @param var.group faut-il dénombrer par groupes? Variable dans le data.frame original servat à grouper (character: nom de variable | numeric : position de la variable | un vecteur : la variable pour les groupes, de la même taille que la variable originale).
-#' @param var.group.order
-#' @param Rnd arrondi pour les pourcentages
 #' @export
 
 transform_binaries<-function(data=trest, 
@@ -28,6 +13,7 @@ transform_binaries<-function(data=trest,
                              external.data.names="names"){
   
   data<-as.data.frame(data)
+  data[]<-lapply(data, as.character)
   
   if(type=="external"){
     if(is.null(external.data)&is.null(external.data.text)){
@@ -55,6 +41,7 @@ transform_binaries<-function(data=trest,
       res[!res%in%Check_var]<-No_var
       if(!nx%in%names.var){stop(paste0(nx, " / ", "!names%in%names.var"))}
       res[res%in%Check_var]<-text.var[names.var==nx]%>%as.character()
+      res<-factor(x = res, levels = unique(c(unique(res), text.var[names.var==nx]%>%as.character())))
       return(res)
     })%>%data.frame(stringsAsFactors = F)
     names(res)<-names(data)
@@ -65,6 +52,9 @@ transform_binaries<-function(data=trest,
         data[ , nx]->res
         res[!res%in%Check_var]<-No_var
         res[res%in%Check_var]<-nx
+        print(class(res))
+        print(res)
+        res<-factor(x = res, levels = unique(c(unique(res), nx)))
         return(res)
       })%>%data.frame(stringsAsFactors = F)
       names(res)<-names(data)
